@@ -1,0 +1,30 @@
+version: '3'
+services:
+  scraper:
+    build: ./parts_scraper/
+    command: python -u main.py
+    links:
+      - db
+
+  
+  api:
+    build: /parts_api
+    ports:
+    - 80:80 
+    depends_on:
+      - db
+  db:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_DATABASE = parts_db
+      - MONGO_INITDB_ROOT_USERNAME = root
+      - MONGO_INITDB_ROOT_PASSWORD = pass
+    container_name: parts_mongodb
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
+    driver: local
